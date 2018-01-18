@@ -9,12 +9,19 @@ class PowerStrip:
         self._outletCurrents = [ 0 for i in range(self._outlets) ]        
 
     def __init__(self, outlets):
+        self.outletsOk(outlets)
         self._outlets = outlets
         self.reset()
 
     def getOutlets(self):
         return self._outlets
 
+    def outletsOk(self,outlets):
+        if not isinstance(outlets,int):
+            raise ValueError("outlets must an integer")
+        if not outlets > 0:
+            raise ValueError("outlets must be positive")
+        
     def outletOk(self, outlet):
         if not isinstance(outlet,int):
             raise ValueError("outlet must an integer")

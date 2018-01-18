@@ -71,6 +71,14 @@ class TestPowerStrip(unittest.TestCase):
         unit = PowerStrip(2)
         self._testInit(unit)
 
+    def testConstructPowerStripInvalid(self):
+        ok = False
+        try:
+            unit = PowerStrip(-2)
+        except ValueError:
+            ok = True
+        self.assertTrue(ok)
+        
     def testModesPowerStrip(self):
         unit = PowerStrip(2)
         self._testModes(unit)
