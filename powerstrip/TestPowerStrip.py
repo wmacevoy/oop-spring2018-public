@@ -2,43 +2,86 @@ import unittest
 from PowerStrip import PowerStrip
 
 class TestPowerStrip(unittest.TestCase):
-    def test_construct(self):
-        ps = PowerStrip(2)
-        self.assertEqual(ps.getMode(),PowerStrip.MODE_REMOTE)
-        self.assertEqual(ps.getOutletState(0),False)
-        self.assertEqual(ps.getOutletState(1),False)
+    def _testInit(self,unit):
+        self.assertEqual(unit.getMode(),PowerStrip.MODE_REMOTE)
+        for outlet in range(unit.getOutlets()):
+            self.assertEqual(unit.getOutletState(outlet),False,
+                             "outlet " + str(outlet) + " should be off")
+    def _testModes(self,unit):
+        unit.setMode(PowerStrip.MODE_ON)
+        for outlet in range(unit.getOutlets()):
+            unit.setOutletState(outlet,False)
+            self.assertEqual(unit.getOutletState(outlet),True)
+            unit.setOutletState(outlet,True)
+            self.assertEqual(unit.getOutletState(outlet),True)
 
-    def test_modes(self):
-        ps = PowerStrip(2)
-        ps.setMode(PowerStrip.MODE_REMOTE)
-        ps.setOutletState(0, True)
-        ps.setOutletState(1, False)
-        self.assertEqual(ps.getOutletState(0), True)
-        self.assertEqual(ps.getOutletState(1), False)
-        ps.setMode(PowerStrip.MODE_OFF)
-        self.assertEqual(ps.getOutletState(0), False)
-        self.assertEqual(ps.getOutletState(1), False)
-        ps.setMode(PowerStrip.MODE_ON)
-        self.assertEqual(ps.getOutletState(0), True)
-        self.assertEqual(ps.getOutletState(1), True)
+        unit.setMode(PowerStrip.MODE_OFF)
+        for outlet in range(unit.getOutlets()):
+            unit.setOutletState(outlet,False)
+            self.assertEqual(unit.getOutletState(outlet),False)
+            unit.setOutletState(outlet,True)
+            self.assertEqual(unit.getOutletState(outlet),False)
 
-    def test_mode_errors(self):
-        ps = PowerStrip(2)
-        ok = False
-        try:
-            ps.setMode("ON")
-        except ValueError:
-            ok = True
-        self.assertTrue(ok)
+        unit.setMode(PowerStrip.MODE_REMOTE)
+        for outlet in range(unit.getOutlets()):
+            unit.setOutletState(outlet,False)
+            self.assertEqual(unit.getOutletState(outlet),False)
+            unit.setOutletState(outlet,True)
+            self.assertEqual(unit.getOutletState(outlet),True)
+        
+        
 
-    def test_output_errors(self):
-        ps = PowerStrip(2)
-        ok = False
-        try:
-            ps.setOutletState(0,0.5)
-        except ValueError:
-            ok = True
-        self.assertTrue(ok)
+    def _testModesInvalid(self,unit):
+        for mode in ("remote","on","off","auto"):
+            ok = False
+            try:
+                unit.setMode(mode)
+            except ValueError:
+                ok = True
+            self.assertTrue(ok)
+
+    def _testOutlet(self,unit,outlet):
+        for state in (False,True):
+            unit.setOutletState(outlet, state)
+            unit.setMode(PowerStrip.MODE_REMOTE)
+            self.assertEqual(unit.getOutletState(outlet), state,
+                             "outlet " + str(outlet) + " should be " + str(state))
+            unit.setMode(PowerStrip.MODE_OFF)
+            self.assertEqual(unit.getOutletState(outlet),False,
+                             "outlet " + str(outlet) + " in off mode should be False.")
+            unit.setMode(PowerStrip.MODE_ON)
+            self.assertEqual(unit.getOutletState(outlet),True,
+                             "outlet " + str(outlet) + " in off mode should be True.")
+
+    def _testOutletInvalid(self,unit,outlet):
+        for state in (0.5,"off","on"):
+            ok = False
+            try:
+                unit.setOutletState(outlet,state)
+            except ValueError:
+                ok = True
+            self.assertTrue(ok, "outlet " + str(outlet) + " should fail to set value " + str(state))
+
+    def _testOutlets(self,unit):
+        for outlet in range(unit.getOutlets()):
+            self._testOutlet(unit,outlet)
+            self._testOutletInvalid(unit,outlet)
+            
+    def testConstructPowerStrip(self):
+        unit = PowerStrip(2)
+        self._testInit(unit)
+
+    def testModesPowerStrip(self):
+        unit = PowerStrip(2)
+        self._testModes(unit)
+        
+    def testModesInvalidPowerStrip(self):
+        unit = PowerStrip(2)
+        self._testModesInvalid(unit)
+
+    def testOutletsPowerStrip(self):
+        unit = PowerStrip(2)
+        self._testOutlets(unit)
         
 if __name__ == '__main__':
     unittest.main()

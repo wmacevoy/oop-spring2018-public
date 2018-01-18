@@ -12,6 +12,9 @@ class PowerStrip:
         self._outlets = outlets
         self.reset()
 
+    def getOutlets(self):
+        return self._outlets
+
     def outletOk(self, outlet):
         if not isinstance(outlet,int):
             raise ValueError("outlet must an integer")
