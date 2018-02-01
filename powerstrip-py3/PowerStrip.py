@@ -30,7 +30,7 @@ class PowerStrip:
 
     def outletStateOk(self, state):
         if not isinstance(state,bool):
-            raise ValueError("outlet state must a boolean")
+            raise ValueError("outlet state must a boolean but was " + str(state))
         
     def modeOk(self, mode):
         if not isinstance(mode,int):

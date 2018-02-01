@@ -5,7 +5,7 @@ class Timer:
         self._delta = datetime.timedelta()
         self._on = Timer.timeToTimedelta(datetime.time.min)
         self._off = Timer.timeToTimedelta(datetime.time.max)
-        
+
     def setDatetime(self, now):
         if not isinstance(now,datetime.datetime):
             raise ValueError("now must be a datetime")

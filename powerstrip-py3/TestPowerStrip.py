@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import unittest
 from PowerStrip import PowerStrip
 
@@ -7,6 +8,12 @@ class TestPowerStrip(unittest.TestCase):
         for outlet in range(unit.getOutlets()):
             self.assertEqual(unit.getOutletState(outlet),False,
                              "outlet " + str(outlet) + " should be off")
+
+    def testInvalidOutput(self):
+        unit = PowerStrip(2)
+        state = False
+        unit.setOutletState(0,state)
+        
     def _testModes(self,unit):
         unit.setMode(PowerStrip.MODE_ON)
         for outlet in range(unit.getOutlets()):
@@ -28,8 +35,6 @@ class TestPowerStrip(unittest.TestCase):
             self.assertEqual(unit.getOutletState(outlet),False)
             unit.setOutletState(outlet,True)
             self.assertEqual(unit.getOutletState(outlet),True)
-        
-        
 
     def _testModesInvalid(self,unit):
         for mode in ("remote","on","off","auto"):
