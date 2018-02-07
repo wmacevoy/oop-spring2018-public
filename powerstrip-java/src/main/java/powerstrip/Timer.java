@@ -15,15 +15,17 @@ import java.time.LocalTime;
  * @author wmacevoy
  */
 public class Timer {
-    private final Clock _clock;
+    private Clock _clock;
     
     Timer(Clock clock) { _clock = clock; }
     Timer() { _clock = Clock.DEFAULT_CLOCK; }
+    public Clock getClock() { return _clock; }
+    public void setClock(Clock clock) { _clock=clock; }
     
     private Time _on;
     
-    public static final Time TIME_0H = new Time(0,0,0,0,0);
-    public static final Time TIME_24H = new Time(1,0,0,0,0);
+    public static final Time TIME_0H = Time.build().time();
+    public static final Time TIME_24H = Time.build().hour(24).time();
     public void setTimeOn(Time value) {
         boolean tooSmall = value.compareTo(TIME_0H) < 0;
         boolean tooLarge = value.compareTo(TIME_24H) > 0;
@@ -48,17 +50,17 @@ public class Timer {
     }
     
     private Duration _delta = Duration.ZERO;
-    public void setDatetime(LocalDateTime now) {
+    public void setDateTime(LocalDateTime now) {
         _delta = Duration.between(_clock.now(),now);
     }; 
     
-    public LocalDateTime getDatetime() {
+    public LocalDateTime getDateTime() {
         return _clock.now().plusSeconds(_delta.getSeconds()).plusNanos(_delta.getNano());
     }
     
     public boolean isActive() {
-        LocalDateTime now = _clock.now();
-        Time time = Time.ofDay(now);
+        LocalDateTime now = getDateTime();
+        Time time = Time.ofDateTime(now);
         
         if (_on.compareTo(_off) <= 0) return (_on.compareTo(time) <= 0) && (time.compareTo(_off) < 0);
         else return (time.compareTo(_off) < 0) || (time.compareTo(_on) >= 0);

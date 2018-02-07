@@ -10,18 +10,16 @@ package powerstrip;
  * @author wmacevoy
  */
 public class PowerStrip {
-    
-    public static final int MODE_ON = 0;
-    
-    private int outlets;
-    private OutletState [] outletStates;
-    private Mode mode;
+    protected int outlets;
+    protected OutletState [] outletStates;
+    protected Mode mode;
     
 
     public PowerStrip(int _outlets) {
         if (_outlets <= 0) {
             throw new IllegalArgumentException("outlets (" + _outlets + ") must be positive.");
         }
+        mode = Mode.REMOTE;
         outlets=_outlets;
         outletStates = new OutletState[outlets];
         for (int outlet = 0; outlet < outlets; ++outlet) {
@@ -40,7 +38,7 @@ public class PowerStrip {
     
     public void outletOk(int outlet) {
         if (outlet < 0 || outlet >= outlets) {
-            throw new IllegalArgumentException("outlet (" + outlet + ") must be between 0 and " + (outlets-1) + ".");
+            throw new IndexOutOfBoundsException("outlet (" + outlet + ") must be between 0 and " + (outlets-1) + ".");
         }
     }
     public void setOutletState(int outlet, OutletState state) {

@@ -7,7 +7,6 @@ package powerstrip;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.Month;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -48,14 +47,10 @@ public class TimerTest {
         return LocalDateTime.now();
     }
 
-    TimeBuilder mkTime() {
-        return new TimeBuilder();
-    }
-
     @Test
     public void testSetTimeOn() {
         Timer timer = new Timer();
-        Time t = new Time(19, 23, 43);
+        Time t = new Time.Builder().hour(19).minute(23).second(43).time();
         timer.setTimeOn(t);
         Time s = timer.getTimeOn();
         assertEquals(s, t);
@@ -83,18 +78,29 @@ public class TimerTest {
         MockClock(LocalDateTime now) {
             _now = now;
         }
+        
+        MockClock() { 
+            _now = LocalDateTime.now();
+        }
 
         @Override
         public LocalDateTime now() {
             return _now;
         }
     }
+    
+    Clock getClock() {
+        LocalDateTime clockNow = LocalDateTime.of(2013, Month.APRIL, 17, 18, 45, 5, 234_000_123);
+        MockClock mockClock = new MockClock(clockNow);
+        return mockClock;
+        
+    }
 
     Timer getTimer() {
         LocalDateTime clockNow = LocalDateTime.of(2013, Month.APRIL, 17, 18, 45, 5, 234_000_123);
         MockClock clock = new MockClock(clockNow);
         Timer timer = new Timer(clock);
-        assertEquals(clockNow, timer.getDatetime());
+        assertEquals(clockNow, timer.getDateTime());
         return timer;
     }
 
@@ -102,22 +108,29 @@ public class TimerTest {
     public void testSetDatetime() {
         Timer timer = getTimer();
         LocalDateTime dateTime = LocalDateTime.of(2013, Month.APRIL, 17, 18, 45, 5, 234_000_123);
-        timer.setDatetime(dateTime);
-        LocalDateTime current = timer.getDatetime();
+        timer.setDateTime(dateTime);
+        LocalDateTime current = timer.getDateTime();
         assertEquals(current, dateTime);
     }
 
     private void timerAlways(Timer timer, boolean value) {
+        MockClock mockClock = new MockClock();
+        Clock origClock = timer.getClock();
+        timer.setClock(mockClock);
         LocalDateTime now = LocalDateTime.of(2023, Month.APRIL, 17, 18, 45, 5, 234_000_123);
         LocalDateTime midnight = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 0);
 
         for (int hour : new int[]{-48, -25, -24, -23, -12, -1, 0, 1, 3, 12, 20, 23, 24, 25, 48}) {
-            for (int min : new int[]{-120, -60, -1, 0, 1, 30, 59, 60, 61, 120}) {
-                for (int sec : new int[]{-120, -60, -1, 0, 1, 30, 59, 60, 61, 120}) {
+            for (int min : new int[]{-120, -61, -60, -59, -1, 0, 1, 30, 59, 60, 61, 120}) {
+                for (int sec : new int[]{-120, -61, -60, -59, -1, 0, 1, 30, 59, 60, 61, 120}) {
                     for (int nan : new int[]{-2_000_000_000, -1_000_000_000, -1, 0, 1, 500_000_000, 999_999_999, 1_000_000_000, 1_000_000_001, 2_000_000_000}) {
                         LocalDateTime at = midnight.plusHours(hour).plusMinutes(min).plusSeconds(sec).plusNanos(nan);
-                        timer.setDatetime(at);
-                        assertEquals(at, timer.getDatetime());
+                        timer.setDateTime(at);
+                        assertEquals(at, timer.getDateTime());
+                        boolean result = timer.isActive();
+                        if (result != value) {
+                            System.out.println("broke at="+at);
+                        }
                         assertEquals(value, timer.isActive());
                     }
                 }
@@ -158,22 +171,22 @@ public class TimerTest {
         LocalDateTime on = midnight.plusNanos(times[i].getTotalNanoseconds());
         LocalDateTime off = midnight.plusNanos(times[j].getTotalNanoseconds());
 
-        timer.setDatetime(on.minusNanos(1));
+        timer.setDateTime(on.minusNanos(1));
         assertFalse(timer.isActive());
-        timer.setDatetime(on);
+        timer.setDateTime(on);
 
         assertTrue("i=" + i + ",j=" + j, timer.isActive());
-        timer.setDatetime(on.plusNanos(1));
+        timer.setDateTime(on.plusNanos(1));
         assertTrue("i=" + i + ",j=" + j, timer.isActive());
-        timer.setDatetime(off.minusNanos(1));
+        timer.setDateTime(off.minusNanos(1));
         assertTrue(timer.isActive());
-        timer.setDatetime(off);
+        timer.setDateTime(off);
         assertFalse(timer.isActive());
-        timer.setDatetime(off.plusNanos(1));
+        timer.setDateTime(off.plusNanos(1));
         assertFalse(timer.isActive());
 
     }
-
+        
     @Test
     public void testIsActive() {
         Timer timer = getTimer();
@@ -188,23 +201,23 @@ public class TimerTest {
                 timer.setTimeOff(times[j]);
                 LocalDateTime on = midnight.plusNanos(times[i].getTotalNanoseconds());
                 LocalDateTime off = midnight.plusNanos(times[j].getTotalNanoseconds());
-                if (i == j) { // no time
+                if (i == j || (i == times.length-1 && j == 0)) { // no time
                     timerAlways(timer, false);
                 } else if (i == 0 && j == times.length - 1) { // all time
                     timerAlways(timer, true);
                 } else {
-                    timer.setDatetime(on.minusNanos(1));
+                    timer.setDateTime(on.minusNanos(1));
                     assertFalse(timer.isActive());
-                    timer.setDatetime(on);
+                    timer.setDateTime(on);
 
                     assertTrue("i=" + i + ",j=" + j, timer.isActive());
-                    timer.setDatetime(on.plusNanos(1));
+                    timer.setDateTime(on.plusNanos(1));
                     assertTrue("i=" + i + ",j=" + j, timer.isActive());
-                    timer.setDatetime(off.minusNanos(1));
+                    timer.setDateTime(off.minusNanos(1));
                     assertTrue(timer.isActive());
-                    timer.setDatetime(off);
+                    timer.setDateTime(off);
                     assertFalse(timer.isActive());
-                    timer.setDatetime(off.plusNanos(1));
+                    timer.setDateTime(off.plusNanos(1));
                     assertFalse(timer.isActive());
                 }
             }

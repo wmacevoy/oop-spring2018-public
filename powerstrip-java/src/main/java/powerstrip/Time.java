@@ -12,6 +12,27 @@ import java.time.LocalDateTime;
  * @author wmacevoy
  */
 public class Time implements Comparable<Time> {
+    
+    public static class Builder {
+        private int _day=0;
+        private int _hour=0;
+        private int _minute=0;
+        private int _second=0;
+        private int _nanosecond=0;
+        public int day() { return _day; }
+        public Builder day(int value) { _day=value; return this; }
+        public int hour() { return _hour; }
+        public Builder hour(int value) { _hour=value; return this; }
+        public int minute() { return _minute; }
+        public Builder minute(int value) { _minute=value; return this; }
+        public int second() { return _second; }
+        public Builder second(int value) { _second = value; return this; }
+        public int nanosecond() { return _nanosecond; }
+        public Builder nanosecond(int value) { _nanosecond = value; return this; }
+        public Time time() { return new Time(_day,_hour,_minute,_second,_nanosecond); }
+    }
+    
+    public static Builder build() { return new Builder(); }
 
     public static final long DAY_NS = 24L * 60L * 60L * 1_000_000_000L;
     public static final long HOUR_NS = 60L * 60L * 1_000_000_000L;
@@ -30,7 +51,7 @@ public class Time implements Comparable<Time> {
     public Time(int day, int hour, int minute, int second, int nanosecond) {
         if (Math.abs(day) > MAX_DAYS
                 || Math.abs(day + hour / 24 + minute / (24 * 60) + second / (24 * 60 * 60)) > MAX_DAYS) {
-            throw new IllegalArgumentException("time must be be less than 106_751 days");
+            throw new IllegalArgumentException("|time| must be be less than " + MAX_DAYS+ " days");
         }
         _nanoseconds = ((((day * 24L) + hour) * 60L + minute) * 60L + second) * 1_000_000_000L + nanosecond;
     }
@@ -75,16 +96,28 @@ public class Time implements Comparable<Time> {
         return _nanoseconds == ((Time) to)._nanoseconds;
     }
 
-    public static Time ofDay(LocalDateTime now) {
+    public static Time ofDateTime(LocalDateTime now) {
         return new Time(0, now.getHour(), now.getMinute(), now.getSecond(), now.getNano());
     }
     
     public static Time ofHMS(int hour, int minute, int second) {
         return new Time(0,hour,minute,second,0);
     }
+    
+    public static Time ofHMSN(int hour, int minute, int second, int nanosecond) {
+        return new Time(0,hour,minute,second,nanosecond);
+    }
+
+    public static Time ofDHMSN(int day, int hour, int minute, int second, int nanosecond) {
+        return new Time(day,hour,minute,second,nanosecond);
+    }
 
     public long getTotalNanoseconds() {
         return _nanoseconds;
     }
-
+    
+    @Override
+    public String toString() {
+        return "" + (24*getDay()+getHour()) + ":" + getMinute() + ":" + (getSecond() + getNanosecond()*1e-9);
+    }
 }

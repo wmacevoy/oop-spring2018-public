@@ -39,6 +39,16 @@ public class TimeTest {
     public void tearDown() {
     }
 
+    @Test
+    public void testBuilder() {
+        assertEquals(Time.build().time(),new Time(0,0,0,0,0));
+        assertEquals(Time.build().day(1).time(),new Time(1,0,0,0,0));
+        assertEquals(Time.build().hour(12).time(),new Time(12,0,0));
+        assertEquals(Time.build().minute(30).time(),new Time(0,30,0));
+        assertEquals(Time.build().second(15).time(),new Time(0,0,15));
+        assertEquals(Time.build().nanosecond(150_450_850).time(),new Time(0,0,0,0,150_450_850));
+        assertEquals(Time.build().day(1).hour(12).minute(30).second(15).nanosecond(150_450_850).time(),new Time(1,12,30,15,150_450_850));
+    }
     /**
      * Test of getDay method, of class Time.
      */
@@ -96,7 +106,7 @@ public class TimeTest {
         LocalDateTime date = LocalDateTime.of(2010,Month.APRIL,13,9,30,22,484_848_222);
         Time expect = new Time(0,date.getHour(),date.getMinute(),date.getSecond(),date.getNano());
         
-        Time result = Time.ofDay(date);
+        Time result = Time.ofDateTime(date);
         assertEquals(expect, result);
     }
 }
