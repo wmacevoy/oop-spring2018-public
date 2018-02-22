@@ -20,6 +20,6 @@ bin/testHello : src/testHello.cpp lib/libgtest.a
 	$(CXX) $(CXXFLAGS) -o $@ src/testHello.cpp $(LDFLAGS)
 
 bin/testPowerStrip : src/testPowerStrip.cpp tmp/PowerStrip.o tmp/testMain.o lib/libgtest.a
-	$(CXX) $(CXXFLAGS) -o $@ $^ src/testPowerStrip.cpp tmp/PowerStrip.o tmp/testMain.o $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ src/testPowerStrip.cpp tmp/PowerStrip.o tmp/testMain.o $(LDFLAGS)
 
 tests : bin/testPowerStrip
