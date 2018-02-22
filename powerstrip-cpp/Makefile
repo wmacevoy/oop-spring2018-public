@@ -1,6 +1,3 @@
-
-
-
 all : tests
 
 # https://github.com/google/googletest
@@ -19,10 +16,10 @@ tmp/testMain.o : src/testMain.cpp
 tmp/PowerStrip.o : src/PowerStrip.cpp include/PowerStrip.h include/Mode.h include/OutletState.h
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
-bin/testHello : src/testHello.cpp
+bin/testHello : src/testHello.cpp lib/libgtest.a
 	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
 
-bin/testPowerStrip : src/testPowerStrip.cpp tmp/PowerStrip.o tmp/testMain.o
+bin/testPowerStrip : src/testPowerStrip.cpp tmp/PowerStrip.o tmp/testMain.o lib/libgtest.a
 	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
 
 tests : bin/testPowerStrip
