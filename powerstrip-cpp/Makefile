@@ -17,9 +17,9 @@ tmp/PowerStrip.o : src/PowerStrip.cpp include/PowerStrip.h include/Mode.h includ
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
 bin/testHello : src/testHello.cpp lib/libgtest.a
-	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ src/testHello.cpp $(LDFLAGS)
 
 bin/testPowerStrip : src/testPowerStrip.cpp tmp/PowerStrip.o tmp/testMain.o lib/libgtest.a
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ src/testPowerStrip.cpp tmp/PowerStrip.o tmp/testMain.o $(LDFLAGS)
 
 tests : bin/testPowerStrip
