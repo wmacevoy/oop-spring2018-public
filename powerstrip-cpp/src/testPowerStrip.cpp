@@ -2,6 +2,19 @@
 #include <stdexcept>
 
 #include "PowerStrip.h"
+#include "MyTest.h"
+
+TEST(PowerStrip, Bad) {
+  int x = 3;
+  int y = 4;
+  bool ok = false;
+  try {
+    assertEquals(x,y);
+  } catch (AssertionError &ae) {
+    ok = true;
+  }
+  ASSERT_EQ(true,ok);
+}
 
 TEST(PowerStrip, Construct) {
   for (int outlets = -1; outlets <= 4; ++outlets) {
@@ -14,6 +27,7 @@ TEST(PowerStrip, Construct) {
           ASSERT_EQ(powerstrip::OutletState::UNPOWERED, ps.getOutletState(i));
         } catch (std::out_of_range &ex) {
           ASSERT_TRUE(i < 0 || i >= ps.getOutlets());
+
         }
       }
     } catch (std::out_of_range &ex) {

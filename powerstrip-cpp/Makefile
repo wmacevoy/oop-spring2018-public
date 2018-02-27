@@ -1,6 +1,3 @@
-
-
-
 all : tests
 
 # https://github.com/google/googletest
@@ -22,7 +19,7 @@ tmp/PowerStrip.o : src/PowerStrip.cpp include/PowerStrip.h include/Mode.h includ
 bin/testHello : src/testHello.cpp
 	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
 
-bin/testPowerStrip : src/testPowerStrip.cpp tmp/PowerStrip.o tmp/testMain.o
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+bin/testPowerStrip : src/testPowerStrip.cpp include/MyTest.h tmp/PowerStrip.o tmp/testMain.o
+	$(CXX) $(CXXFLAGS) -o $@ src/testPowerStrip.cpp tmp/PowerStrip.o tmp/testMain.o $(LDFLAGS)
 
 tests : bin/testPowerStrip
