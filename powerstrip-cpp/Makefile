@@ -16,8 +16,8 @@ tmp/testMain.o : src/testMain.cpp
 tmp/PowerStrip.o : src/PowerStrip.cpp include/PowerStrip.h include/Mode.h include/OutletState.h
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
-bin/testHello : src/testHello.cpp
-	$(CXX) $(CXXFLAGS) -o $@ $< $(LDFLAGS)
+bin/testHello : src/testHello.cpp lib/libgtest.a
+	$(CXX) $(CXXFLAGS) -o $@ src/testHello.cpp $(LDFLAGS)
 
 bin/testPowerStrip : src/testPowerStrip.cpp include/MyTest.h tmp/PowerStrip.o tmp/testMain.o
 	$(CXX) $(CXXFLAGS) -o $@ src/testPowerStrip.cpp tmp/PowerStrip.o tmp/testMain.o $(LDFLAGS)
