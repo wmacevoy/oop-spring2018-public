@@ -1,6 +1,7 @@
 #include "PowerStrip.h"
 #include <stdexcept>
 #include <sstream>
+#include <iostream>
 
 namespace powerstrip {
   PowerStrip::PowerStrip(int _outlets)
@@ -48,5 +49,6 @@ namespace powerstrip {
   void PowerStrip::setModeOff() { setMode(Mode::OFF); }
   void PowerStrip::setModeOn() { setMode(Mode::ON); }
   void PowerStrip::setModeRemote() { setMode(Mode::REMOTE); }
-  
+
+  PowerStrip::~PowerStrip() { std::cerr << "cleaned up PowerStrip" << std::endl; }
 }
