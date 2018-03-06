@@ -16,10 +16,16 @@ tmp/testMain.o : src/testMain.cpp
 tmp/PowerStrip.o : src/PowerStrip.cpp include/PowerStrip.h include/Mode.h include/OutletState.h
 	$(CXX) -c $(CXXFLAGS) -o $@ $<
 
+tmp/RetractablePowerStrip.o : src/RetractablePowerStrip.cpp include/RetractablePowerStrip.h include/PowerStrip.h include/Mode.h include/OutletState.h
+	$(CXX) -c $(CXXFLAGS) -o $@ $<
+
 bin/testHello : src/testHello.cpp lib/libgtest.a
 	$(CXX) $(CXXFLAGS) -o $@ src/testHello.cpp $(LDFLAGS)
 
 bin/testPowerStrip : src/testPowerStrip.cpp tmp/PowerStrip.o tmp/testMain.o lib/libgtest.a
 	$(CXX) $(CXXFLAGS) -o $@ src/testPowerStrip.cpp tmp/PowerStrip.o tmp/testMain.o $(LDFLAGS)
 
-tests : bin/testPowerStrip
+bin/testRetractablePowerStrip : src/testRetractablePowerStrip.cpp tmp/RetractablePowerStrip.o tmp/PowerStrip.o tmp/testMain.o lib/libgtest.a
+	$(CXX) $(CXXFLAGS) -o $@ src/testRetractablePowerStrip.cpp tmp/RetractablePowerStrip.o tmp/PowerStrip.o tmp/testMain.o $(LDFLAGS)
+
+tests : bin/testPowerStrip bin/testRetractablePowerStrip
