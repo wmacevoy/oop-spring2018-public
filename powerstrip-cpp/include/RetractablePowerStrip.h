@@ -1,9 +1,10 @@
 #pragma once
 
 #include "PowerStrip.h"
+#include "Retractable.h"
 
 namespace powerstrip {
-  class RetractablePowerStrip : public PowerStrip {
+  class RetractablePowerStrip : public PowerStrip, public Retractable {
   private: bool isRetracted;
   public: RetractablePowerStrip(int outlets);
   public: virtual void extend();

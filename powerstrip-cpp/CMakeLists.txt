@@ -84,7 +84,7 @@ include_directories(SYSTEM
 #
 # build the static gtest library (goes in lib folder)
 #
-add_library(gtest STATIC ${GTEST_TEST_DIR}/src/gtest-all.cc)
+add_library(gtest STATIC ${GTEST_TEST_DIR}/src/gtest-all.cc include/RetractableSolarPanelPowerStrip.h)
 
 #
 # build the static sources library (all regular source files)
@@ -102,3 +102,5 @@ target_link_libraries(testPowerStrip ${CMAKE_THREAD_LIBS_INIT} gtest sources)
 add_executable(testRetractablePowerStrip src/testRetractablePowerStrip.cpp src/testMain.cpp)
 target_link_libraries(testRetractablePowerStrip ${CMAKE_THREAD_LIBS_INIT} gtest sources)
 
+add_executable(testRetractableSolarPanelPowerStrip src/testRetractableSolarPanelPowerStrip.cpp src/testMain.cpp)
+target_link_libraries(testRetractableSolarPanelPowerStrip ${CMAKE_THREAD_LIBS_INIT} gtest)
