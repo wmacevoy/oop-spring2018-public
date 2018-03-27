@@ -103,4 +103,4 @@ add_executable(testRetractablePowerStrip src/testRetractablePowerStrip.cpp src/t
 target_link_libraries(testRetractablePowerStrip ${CMAKE_THREAD_LIBS_INIT} gtest sources)
 
 add_executable(testRetractableSolarPanelPowerStrip src/testRetractableSolarPanelPowerStrip.cpp src/testMain.cpp)
-target_link_libraries(testRetractableSolarPanelPowerStrip ${CMAKE_THREAD_LIBS_INIT} gtest)
+target_link_libraries(testRetractableSolarPanelPowerStrip ${CMAKE_THREAD_LIBS_INIT} gtest sources)
