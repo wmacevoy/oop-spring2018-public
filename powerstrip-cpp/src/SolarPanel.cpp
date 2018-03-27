@@ -3,6 +3,9 @@
 #include <iostream>
 
 namespace powerstrip {
+  SolarPanel::SolarPanel() {
+    std::cout << "made SolarPanel@" << ((void*) this) << std::endl;
+  }
     void SolarPanel::pointAtSun() {
         std::cout << "pointing at sun..." << std::endl;
     }

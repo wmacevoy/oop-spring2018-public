@@ -1,3 +1,4 @@
+#include <iostream>
 #include "RetractablePowerStrip.h"
 
 namespace powerstrip {
@@ -5,6 +6,7 @@ namespace powerstrip {
   RetractablePowerStrip::RetractablePowerStrip(int outlets)
     : PowerStrip(outlets), isRetracted(false)
   {
+    std::cout << "made RetractablePowerStrip@" << ((void*) this) << std::endl;
   }
 
   void RetractablePowerStrip::extend() {

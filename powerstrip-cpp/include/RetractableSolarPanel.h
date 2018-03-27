@@ -4,16 +4,8 @@
 #include "Retractable.h"
 
 namespace powerstrip {
-    class RetractableSolarPanel : public Retractable, public SolarPanel {
-    private:
-        bool extended;
-
-        virtual void extend() override;
-
-        virtual void retract() override;
-
-        virtual bool isExtended() const override;
-
-        double amps() const override;
+    class RetractableSolarPanel : public virtual Retractable, public SolarPanel {
+    public:  RetractableSolarPanel();
+    public: double amps() const override;
     };
 }

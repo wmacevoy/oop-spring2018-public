@@ -4,7 +4,7 @@
 #include "Retractable.h"
 
 namespace powerstrip {
-  class RetractablePowerStrip : public PowerStrip, public Retractable {
+  class RetractablePowerStrip : public PowerStrip, public virtual Retractable {
   private: bool isRetracted;
   public: RetractablePowerStrip(int outlets);
   public: virtual void extend();

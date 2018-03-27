@@ -7,6 +7,8 @@ namespace powerstrip {
   PowerStrip::PowerStrip(int _outlets)
     : outlets(_outlets > 0 ? _outlets : 0), outletStates(outlets, OutletState::UNPOWERED), mode(Mode::REMOTE)
   {
+    std::cout << "made PowerStrip@" << ((void*) this) << std::endl;
+    
     if (outlets <= 0) {
       std::ostringstream oss;
       oss << "outlets (" << outlets << ") must be positive.";
